@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Button, View, Text, TextInput} from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
+import RegisterUser from "../components/RegisterUser";
+import Login from "../components/Login";
 
 const AuthContext = React.createContext()
 
@@ -9,10 +11,7 @@ const AuthContext = React.createContext()
 function HomeScreen(){
     const {signOut} = React.useContext(AuthContext)
     return (
-        <View>
-            <Text>Signed in!</Text>
-            <Button title="Sign out" onPress={signOut} />
-        </View>
+        <Login />
     )
 }
 
@@ -37,25 +36,6 @@ function SignInScreen() {
                 secureTextEntry
             />
             <Button title="Sign in" onPress={() => signIn({ username, password })} />
-        </View>
-    );
-}
-
-
-
-function SplahScreen({ navigation }) {
-    return (
-        <View>
-            <Text>Estamos lendo seus dados</Text>
-        </View>
-    );
-}
-
-
-function NotificationsScreen({ navigation }) {
-    return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Button onPress={() => navigation.goBack()} title="Go back home" />
         </View>
     );
 }
@@ -104,11 +84,6 @@ export default function Routes({ navigation }) {
             } catch (e) {
                 // Restoring token failed
             }
-
-            // After restoring token, we may need to validate it in production apps
-
-            // This will switch to the App screen or Auth screen and this loading
-            // screen will be unmounted and thrown away.
             dispatch({ type: 'RESTORE_TOKEN', token: userToken });
         };
 
@@ -118,20 +93,10 @@ export default function Routes({ navigation }) {
     const authContext = React.useMemo(
         () => ({
             signIn: async (data) => {
-                // In a production app, we need to send some data (usually username, password) to server and get a token
-                // We will also need to handle errors if sign in failed
-                // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
-                // In the example, we'll use a dummy token
-
                 dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
             },
             signOut: () => dispatch({ type: 'SIGN_OUT' }),
             signUp: async (data) => {
-                // In a production app, we need to send user data to server and get a token
-                // We will also need to handle errors if sign up failed
-                // After getting token, we need to persist the token using `SecureStore` or any other encrypted storage
-                // In the example, we'll use a dummy token
-
                 dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
             },
         }),
@@ -146,14 +111,24 @@ export default function Routes({ navigation }) {
                         state.isLoading ? (
                             <Drawer.Screen name={'Splash'} component={SplahScreen} />
                         ): state.userToken == null ? (
-                            <Drawer.Screen name={'Login'} component={SignInScreen}
-                               options={{
-                                   title: 'Sign in',
-                                   // When logging out, a pop animation feels intuitive
-                                   animationTypeForReplace: state.isSignout ? 'pop' : 'push',
-                               }}/>
+                            <>
+                                <Drawer.Screen name={'Login'} component={SignInScreen}
+                                               options={{
+                                                   title: 'Sign in',
+                                                   animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+                                               }}/>
+                                <Drawer.Screen name={'Registrar-se'} component={RegisterUser}
+                                               options={{
+                                                   title: 'Registrar-se',
+                                                   animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+                                               }}/>
+                            </>
+
                         ) : (
-                            <Drawer.Screen name={'Home Screen'} component={HomeScreen} />
+                            <>
+                                <Drawer.Screen name={'Home Screen'} component={HomeScreen} />
+                                <Drawer.Screen name={'Registrar-se'} component={RegisterUser} />
+                            </>
                         )
                     }
                 </Drawer.Navigator>
