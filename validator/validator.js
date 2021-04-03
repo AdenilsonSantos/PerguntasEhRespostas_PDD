@@ -9,6 +9,7 @@ const registerValidator =  Yup.object().shape({
     password: Yup.string()
         .min(8, ({ min }) => `A senha deve conter ${min} caracteres no mínimo`)
         .max(10, ({max}) => `A senha não pode ter mais que ${max} caracteres.`)
+        .required("Insira a senha")
 })
 
 const loginValidator =  Yup.object().shape({
@@ -18,6 +19,7 @@ const loginValidator =  Yup.object().shape({
     password: Yup.string()
         .min(8, ({ min }) => `A senha deve conter ${min} caracteres no mínimo`)
         .max(10, ({max}) => `A senha não pode ter mais que ${max} caracteres.`)
+        .required("Insira a senha")
 })
 
 export default {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import * as React from "react";
 import { View, Alert, StyleSheet, Image, Keyboard } from "react-native";
 import {TextInput, Button, Title, Text} from 'react-native-paper';
 import {Formik} from "formik";
@@ -6,11 +6,16 @@ import AuthUser from "../Auth/AuthUser";
 import Validator from "../validator/validator";
 
 import Logo from '../assets/logo.png'
+import {AuthContext} from "../routes/Routes";
+
+//export const AuthenticatedContext = React.createContext()
 
 
 export default function Login({ navigation }) {
 
-    const [user, setUser] = useState({
+    const {authUser, setAuthUser} = React.useContext(AuthContext)
+
+    const [user, setUser] = React.useState({
         email: '',
         password: ''
     })
@@ -20,7 +25,9 @@ export default function Login({ navigation }) {
         AuthUser.AuthenticatedUser(
             values.email,
             values.password
-        ).then((response) => {
+        ).then( async (response) => {
+            let user = response?.user
+            await setAuthUser({isAuthenticated: true, uid: user.uid, name: user.name})
             Alert.alert(response?.message)
         }).catch((error) => {
             Alert.alert(error.message)

@@ -14,7 +14,13 @@ async function RegisterUser(fullName, email, password){
             await user.updateProfile({displayName: fullName, photoURL: null})
             UID_USER_AUTHENTICATED = user.uid
             FULLNAME_USER_AUTHENTICATED = user.displayName
-            responseMessage = {isSussecc: true, message: `Bem-vindo a nossa plataforma ${user.displayName}`}
+            responseMessage = {isSussecc: true,
+                message: `Bem-vindo a nossa plataforma ${FULLNAME_USER_AUTHENTICATED}`,
+                user: {
+                    name: FULLNAME_USER_AUTHENTICATED,
+                    uid: UID_USER_AUTHENTICATED
+                }
+            }
         })
         .catch((error) => {
             responseMessage = {isSussecc: false, message: `Não conseguimos concluir seu cadastro. ${error.code}`}
@@ -26,11 +32,16 @@ async function RegisterUser(fullName, email, password){
 async function AuthenticatedUser(email, password){
     let responseMessage = ''
     await Firebase.auth().signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
+        .then( async (userCredential) => {
             let user = userCredential.user
             UID_USER_AUTHENTICATED = user.uid
             FULLNAME_USER_AUTHENTICATED = user.displayName
-            responseMessage = {isSussecc: true, message: `Olá ${user.displayName}, você foi autenticado`}
+            responseMessage = {isSussecc: true,
+                message: `Olá ${user.displayName}, você foi autenticado`,
+                user: {
+                    uid: user.uid,
+                    name: user.displayName
+                }}
         })
         .catch((error) => {
             responseMessage = {isSussecc: false, message: `Houve algum erro, tente novamente`}
