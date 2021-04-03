@@ -3,6 +3,7 @@ import {db} from '../config/config';
 
 let UID_USER_AUTHENTICATED = null
 let FULLNAME_USER_AUTHENTICATED = null
+let EMAIL_USER_AUTHENTICATED = null
 
 
 //Registrar usuário
@@ -14,11 +15,13 @@ async function RegisterUser(fullName, email, password){
             await user.updateProfile({displayName: fullName, photoURL: null})
             UID_USER_AUTHENTICATED = user.uid
             FULLNAME_USER_AUTHENTICATED = user.displayName
+            EMAIL_USER_AUTHENTICATED = user.email
             responseMessage = {isSussecc: true,
                 message: `Bem-vindo a nossa plataforma ${FULLNAME_USER_AUTHENTICATED}`,
                 user: {
+                    uid: UID_USER_AUTHENTICATED,
                     name: FULLNAME_USER_AUTHENTICATED,
-                    uid: UID_USER_AUTHENTICATED
+                    email: EMAIL_USER_AUTHENTICATED
                 }
             }
         })
@@ -36,11 +39,13 @@ async function AuthenticatedUser(email, password){
             let user = userCredential.user
             UID_USER_AUTHENTICATED = user.uid
             FULLNAME_USER_AUTHENTICATED = user.displayName
+            EMAIL_USER_AUTHENTICATED = user.email
             responseMessage = {isSussecc: true,
-                message: `Olá ${user.displayName}, você foi autenticado`,
+                message: `Olá ${FULLNAME_USER_AUTHENTICATED}, você foi autenticado`,
                 user: {
-                    uid: user.uid,
-                    name: user.displayName
+                    uid: UID_USER_AUTHENTICATED,
+                    name: FULLNAME_USER_AUTHENTICATED,
+                    email: EMAIL_USER_AUTHENTICATED
                 }}
         })
         .catch((error) => {

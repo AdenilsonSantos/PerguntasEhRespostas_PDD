@@ -21,13 +21,12 @@ export default function Login({ navigation }) {
     })
 
     const onSubmit = (values) => {
-        console.log("Aqui")
         AuthUser.AuthenticatedUser(
             values.email,
             values.password
         ).then( async (response) => {
             let user = response?.user
-            await setAuthUser({isAuthenticated: true, uid: user.uid, name: user.name})
+            await setAuthUser({isAuthenticated: true, uid: user.uid, name: user.name, email: user.email})
             Alert.alert(response?.message)
         }).catch((error) => {
             Alert.alert(error.message)
