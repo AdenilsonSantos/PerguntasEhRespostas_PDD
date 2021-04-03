@@ -4,22 +4,22 @@ import {Button, Text, TextInput, Title} from "react-native-paper";
 import MatterService from "../services/MatterService";
 import Validator from "../validator/validator";
 import {Formik} from "formik";
+import {RegisterQuestionContext} from "./RegisterQuestion";
 
 
 export default function RegisterMatter(props){
 
-    const [matter, setMatters] = React.useState('')
+    const {setNewMatter} = React.useContext(RegisterQuestionContext)
+
+    const [matter, setMatters] = React.useState({matter: ''})
     const [isSuccess, setIsSuccess] = React.useState(true)
     const [visible, setVisible] = React.useState(props.visible ? true : false)
 
-    const newMatter = () => {
-        props.setNewMatter(false)
-    }
-
-    const onSubmit = async (values) => {
-        await MatterService.registerMatter(matter)
-            .then(async (response) => {
-                await setVisible(false)
+    const onSubmit = (values) => {
+        MatterService.registerMatter(values.matter, props.uid)
+            .then((response) => {
+                setNewMatter(false)
+                setVisible(false)
                 Alert.alert(response?.message)
             })
             .catch((error) => {
@@ -49,7 +49,7 @@ export default function RegisterMatter(props){
                                   errors,
                                   values }) => (
                                 <>
-                                    {errors && <Text>Não conseguimos cadastrar o assuntos</Text>}
+                                    {errors.matter && <Text style={styles.errors} >{errors.matter}</Text>}
                                     <TextInput
                                         style={styles.input}
                                         name="matter"
@@ -61,7 +61,7 @@ export default function RegisterMatter(props){
                                     <Button style={styles.buttonPrimary} mode="contained" onPress={handleSubmit}>
                                         Cadastrar novo assunto
                                     </Button>
-                                    <Button style={styles.buttonSecondary} mode="contained" onPress={() => setVisible(false)}>
+                                    <Button style={styles.buttonSecondary} mode="contained" onPress={() => MatterService.getMatters()}>
                                         Sair
                                     </Button>
                                 </>
@@ -78,8 +78,8 @@ export default function RegisterMatter(props){
 const styles = StyleSheet.create({
     container: {
         padding: 13,
-        height: '40%',
-        width: '90%',
+        height: 400,
+        width: 350,
         //borderWidth: 3,
         alignSelf: 'center',
         borderRadius: 16,
