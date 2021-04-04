@@ -6,6 +6,7 @@ import {Button, Text} from 'react-native-paper';
 
 import {AuthContext} from "../routes/Routes";
 import MatterService from "../services/MatterService";
+import QuizService from "../services/QuizService";
 
 
 export default function Profile({ navigation }){
@@ -33,7 +34,7 @@ export default function Profile({ navigation }){
             <View style={styles.containerButtons}>
                 <Button style={styles.buttonPrimary} mode="contained" onPress={() => navigation.navigate('Criar Pergunta')} >Criar uma pergunta</Button>
                 <Button style={styles.buttonSecondary} mode="contained" onPress={() => navigation.navigate('Responder Questionário')}>Responder um Questionário</Button>
-                <Button style={styles.buttonSecondary} mode="contained" onPress={logOut} >Sair</Button>
+                <Button style={styles.buttonOut} mode="contained" onPress={() => MatterService.getMatters()} >Sair</Button>
             </View>
         </View>
     )
@@ -68,7 +69,12 @@ const styles = StyleSheet.create({
     },
     buttonSecondary:{
         marginTop: 10,
-        backgroundColor: '#A9A9A9',
+        backgroundColor: '#8944eb',
+        padding: 12
+    },
+    buttonOut:{
+        marginTop: 10,
+        backgroundColor: '#ab87de',
         padding: 12
     },
     containerButtons:{

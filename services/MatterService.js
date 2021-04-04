@@ -22,15 +22,14 @@ async function registerMatter(matter){
 }
 
 async function getMatters(){
-    let aux = undefined
+    let matters = []
     await db.ref('/matters')
-        .on('value', (snapshot) => {
-            let data = snapshot.val();
-            let matters = Object.values(data);
-            console.log(matters)
-            aux = matters
+        .get().then((dataSnapshot) => {
+            dataSnapshot.forEach((matter) => {
+                matters.push(matter.val())
+            })
         })
-    return aux
+    return matters
 }
 
 async function existMatter(matter){

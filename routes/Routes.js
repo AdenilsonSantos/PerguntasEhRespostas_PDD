@@ -22,11 +22,13 @@ export default function Routes() {
                     {
                         ( authUser.isAuthenticated )?
                             <>
-                                <Drawer.Screen name={"Perfil"}component={Profile} />
+                                <Drawer.Screen options={{ title: `${authUser.name}` }} name={"Perfil"}component={Profile} />
                                 <Drawer.Screen name={"Criar Pergunta"} component={RegisterQuestion} />
                                 <Drawer.Screen name={"Responder Questionário"} component={AnswerQuestion} />
                             </>:
                             <>
+                                <Drawer.Screen name={"Responder Questionário"} component={AnswerQuestion} />
+                                <Drawer.Screen name={"Criar Pergunta"} component={RegisterQuestion} />
                                 <Drawer.Screen name={"Acessar"} component={Login} />
                                 <Drawer.Screen name={"Seja um membro"} component={RegisterUser} />
                             </>

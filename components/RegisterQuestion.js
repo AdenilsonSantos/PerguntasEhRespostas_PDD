@@ -6,7 +6,6 @@ import Validator from "../validator/validator";
 import QuestionService from "../services/QuestionService";
 import MatterService from "../services/MatterService";
 import RegisterMatter from "./RegisterMatter";
-import Profile from "./Profile";
 
 export const RegisterQuestionContext = React.createContext({isRegister: false})
 
