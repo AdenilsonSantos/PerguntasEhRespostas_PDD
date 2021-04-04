@@ -13,8 +13,7 @@ async function registerQuestion(ask, alternative_a, alternative_b,
                 alternative_c,
                 alternative_d,
                 alternativeCorrect,
-                matter,
-                uid
+                matter
             })
         .then((response) => {
             responseMessage = {isSuccess: true, message: "Sua resposta foi cadastrada com sucesso"}

@@ -12,11 +12,10 @@ export default function RegisterMatter(props){
     const {setNewMatter} = React.useContext(RegisterQuestionContext)
 
     const [matter, setMatters] = React.useState({matter: ''})
-    const [isSuccess, setIsSuccess] = React.useState(true)
     const [visible, setVisible] = React.useState(props.visible ? true : false)
 
     const onSubmit = (values) => {
-        MatterService.registerMatter(values.matter, props.uid)
+        MatterService.registerMatter(values.matter)
             .then((response) => {
                 setNewMatter(false)
                 setVisible(false)
@@ -61,7 +60,7 @@ export default function RegisterMatter(props){
                                     <Button style={styles.buttonPrimary} mode="contained" onPress={handleSubmit}>
                                         Cadastrar novo assunto
                                     </Button>
-                                    <Button style={styles.buttonSecondary} mode="contained" onPress={() => MatterService.getMatters()}>
+                                    <Button style={styles.buttonSecondary} mode="contained" onPress={() => setNewMatter(false)}>
                                         Sair
                                     </Button>
                                 </>

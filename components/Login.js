@@ -1,6 +1,6 @@
 import * as React from "react";
-import { View, Alert, StyleSheet, Image, Keyboard } from "react-native";
-import {TextInput, Button, Title, Text} from 'react-native-paper';
+import { View, Alert, StyleSheet, Image} from "react-native";
+import {TextInput, Button, Text} from 'react-native-paper';
 import {Formik} from "formik";
 import AuthUser from "../Auth/AuthUser";
 import Validator from "../validator/validator";
@@ -8,19 +8,17 @@ import Validator from "../validator/validator";
 import Logo from '../assets/logo.png'
 import {AuthContext} from "../routes/Routes";
 
-//export const AuthenticatedContext = React.createContext()
 
 
 export default function Login({ navigation }) {
 
-    const {authUser, setAuthUser} = React.useContext(AuthContext)
-
-    const [user, setUser] = React.useState({
+    const { setAuthUser } = React.useContext(AuthContext)
+    const [ user, setUser ] = React.useState({
         email: '',
         password: ''
     })
 
-    const onSubmit = (values) => {
+    const onSubmit = (values, resetForm) => {
         AuthUser.AuthenticatedUser(
             values.email,
             values.password
@@ -28,6 +26,9 @@ export default function Login({ navigation }) {
             let user = response?.user
             await setAuthUser({isAuthenticated: true, uid: user.uid, name: user.name, email: user.email})
             Alert.alert(response?.message)
+            if (response?.isSuccess){
+                resetForm({values: ''})
+            }
         }).catch((error) => {
             Alert.alert(error.message)
         })
@@ -41,7 +42,9 @@ export default function Login({ navigation }) {
             <Formik
                 initialValues={user}
                 validationSchema={Validator.loginValidator}
-                onSubmit={onSubmit}
+                onSubmit={(values, {resetForm}) => {
+                    onSubmit(values, resetForm)
+                }}
             >
                 {({ handleChange,
                       handleBlur,
@@ -72,7 +75,7 @@ export default function Login({ navigation }) {
                         <Button style={styles.buttonPrimary} mode="contained" onPress={handleSubmit}>
                             Entrar na plataforma
                         </Button>
-                        <Button style={styles.buttonSecondary} mode="contained" onPress={handleSubmit}>
+                        <Button style={styles.buttonSecondary} mode="contained" onPress={() => navigation.navigate('Seja um membro')}>
                             Quero ser membro
                         </Button>
                     </>
@@ -96,7 +99,6 @@ const styles = StyleSheet.create({
     },
     buttonPrimary: {
         marginTop: 10,
-        //backgroundColor: '#6200ee',
         padding: 12
     },
     buttonSecondary:{

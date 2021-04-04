@@ -5,6 +5,7 @@ import Login from "../components/Login";
 import Profile from "../components/Profile";
 import RegisterQuestion from "../components/RegisterQuestion";
 import RegisterUser from "../components/RegisterUser";
+import AnswerQuestion from "../components/AnswerQuestion";
 
 export const AuthContext = React.createContext({isAuthenticated: false, uid: '', name: '', email: ''})
 
@@ -21,14 +22,13 @@ export default function Routes() {
                     {
                         ( authUser.isAuthenticated )?
                             <>
-                                <Drawer.Screen name={"Perfil"} component={Profile} />
-                                <Drawer.Screen name={"Login"} component={Login} />
+                                <Drawer.Screen name={"Perfil"}component={Profile} />
+                                <Drawer.Screen name={"Criar Pergunta"} component={RegisterQuestion} />
+                                <Drawer.Screen name={"Responder Questionário"} component={AnswerQuestion} />
                             </>:
                             <>
-                                <Drawer.Screen name={"Perfil"} component={Profile} />
-                                <Drawer.Screen name={"Registro"} component={RegisterUser} />
-                                <Drawer.Screen name={"Criar Questão"} component={RegisterQuestion} />
-                                <Drawer.Screen name={"Login"} component={Login} />
+                                <Drawer.Screen name={"Acessar"} component={Login} />
+                                <Drawer.Screen name={"Seja um membro"} component={RegisterUser} />
                             </>
                     }
                 </Drawer.Navigator>

@@ -2,28 +2,38 @@ import React, {useState} from "react";
 import { View, Alert, StyleSheet } from "react-native";
 import {TextInput, Button, Title, Text} from 'react-native-paper';
 import {Formik} from "formik";
+
 import AuthUser from "../Auth/AuthUser";
 import Validator from "../validator/validator";
-
+import {AuthContext} from "../routes/Routes";
 
 
 export default function RegisterUser({ navigation }) {
 
-    const [user, setUser] = useState({
+    const { authUser, setAuthUser } = React.useContext(AuthContext)
+
+    const [ user ] = useState({
         fullName: '',
         email: '',
         password: ''
     })
 
-    const onSubmit = (values) => {
+    const onSubmit = (values, {resetForm}) => {
         AuthUser.RegisterUser(
             values.fullName,
             values.email,
             values.password
         ).then((response) => {
             Alert.alert(response?.message)
-        }).catch((error) => {
-            Alert.alert(error.message)
+            if (response?.isSuccess){
+                AuthUser.AuthenticatedUser(
+                    values.email,
+                    values.password
+                ).then( async (response) => {
+                    let user = response?.user
+                    await setAuthUser({isAuthenticated: true, uid: user.uid, name: user.name, email: user.email})
+                })
+            }
         })
     }
 
@@ -35,11 +45,14 @@ export default function RegisterUser({ navigation }) {
             <Formik
                 initialValues={user}
                 validationSchema={Validator.registerValidator}
-                onSubmit={onSubmit}
+                onSubmit={(values, {resetForm}) => {
+                    onSubmit(values, resetForm)
+                }}
             >
                 {({ handleChange,
                       handleBlur,
                       handleSubmit,
+                      resetForm,
                       errors,
                       values }) => (
                     <>
@@ -74,7 +87,10 @@ export default function RegisterUser({ navigation }) {
                         <Button style={styles.buttonPrimary} mode="contained" onPress={handleSubmit}>
                             Torna-se membro
                         </Button>
-                        <Button style={styles.buttonSecondary} mode="contained" onPress={handleSubmit}>
+                        <Button style={styles.buttonSecondary} mode="contained" onPress={() =>{
+                            navigation.navigate('Acessar')
+                            resetForm({values: ''})
+                        } }>
                             Agora não
                         </Button>
                     </>

@@ -4,15 +4,13 @@ import {TextInput, Button, Title, Text} from 'react-native-paper';
 import {Formik} from "formik";
 import Validator from "../validator/validator";
 import QuestionService from "../services/QuestionService";
-import {AuthContext} from "../routes/Routes";
-import RegisterMatter from "./RegisterMatter";
 import MatterService from "../services/MatterService";
+import RegisterMatter from "./RegisterMatter";
+import Profile from "./Profile";
 
 export const RegisterQuestionContext = React.createContext({isRegister: false})
 
 export default function RegisterQuestion({ navigation }) {
-
-    const { uid } = React.useContext(AuthContext)
 
     const [newMatter, setNewMatter] = React.useState(false)
     const [question, setQuestion] = React.useState({
@@ -26,10 +24,13 @@ export default function RegisterQuestion({ navigation }) {
         matter: ''
     })
 
-    const [matters, setMatters] = React.useState([])
+    const [matters, setMatters] = React.useState([
+        {
+        "matter": ""
+    }])
 
-    const getMatters = React.useCallback(() => {
-        MatterService.getMatters().then((response) => {
+    const getMatters = React.useCallback(async () => {
+        await MatterService.getMatters().then((response) => {
             setMatters(response)
         })
     }, [])
@@ -47,8 +48,7 @@ export default function RegisterQuestion({ navigation }) {
             values.alternative_c,
             values.alternative_d,
             values.alternativeCorrect,
-            values.matter,
-            uid
+            values.matter
         ).then((response) => {
             Alert.alert(response?.message)
         }).catch((error) => {
@@ -59,7 +59,7 @@ export default function RegisterQuestion({ navigation }) {
     return (
         <RegisterQuestionContext.Provider value={{newMatter, setNewMatter}}>
             <ScrollView>
-                {newMatter && <RegisterMatter uid={uid ? uid : 'ola'} visible={true} />}
+                {newMatter && <RegisterMatter visible={true} />}
                 <View style={styles.container} >
                     <View style={styles.containerAux} >
                         <Title style={styles.title} >Insira sua pergunta aqui</Title>
@@ -73,6 +73,7 @@ export default function RegisterQuestion({ navigation }) {
                                   handleBlur,
                                   handleSubmit,
                                   setFieldValue,
+                                  resetForm,
                                   errors,
                                   values }) => (
                                 <>
@@ -178,10 +179,10 @@ export default function RegisterQuestion({ navigation }) {
                                         </Picker>
                                     </View>
                                     <Button style={styles.buttonPrimary} mode="contained" onPress={handleSubmit}>
-                                        Torna-se membro
+                                        Cadastrar Pergunta
                                     </Button>
-                                    <Button style={styles.buttonSecondary} mode="contained" onPress={handleSubmit}>
-                                        Agora não
+                                    <Button style={styles.buttonSecondary} mode="contained" onPress={() => resetForm({values: ''})}>
+                                        Resetar Formulário
                                     </Button>
                                 </>
                             )}
