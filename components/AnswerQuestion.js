@@ -7,20 +7,19 @@ import QuizService from "../services/QuizService";
 
 export default function AnswerQuestion({ navigation }){
 
-    const [a, setA] = React.useState(false)
-    const [perguntas, setPerguntas] = React.useState([])
-    const [pergunta, setPergunta] = React.useState()
+    const [startQuizz, setStartQuizz] = React.useState(false)
+    const [questions, setQuestions] = React.useState([])
+    const [question, setQuestion] = React.useState()
     const [matters, setMatters] = React.useState([])
 
     const getQuestions = React.useCallback((matter) => {
         QuizService.getQuestions(matter).then((response) => {
-            console.log(response)
-            setPerguntas(response)
+            setQuestions(response)
             if (response.length === 0){
-                Alert.alert('Não existem perguntas para esse assunto')
+                Alert.alert('Assuntos','Não existem perguntas para esse assunto')
             }else{
-                setPergunta(response.pop())
-                setA(true)
+                setQuestion(response.pop())
+                setStartQuizz(true)
             }
         })
     }, [])
@@ -36,11 +35,18 @@ export default function AnswerQuestion({ navigation }){
         getMatters().then(r => "")
     }, [getMatters])
 
+    const check = () => {
+        if(!(questions.length <= 0)){
+            setQuestion(questions.pop())
+        }else{
+            Alert.alert('Fim da tarefa',"Finalizamos essa tarefa, até a próxima")
+            setStartQuizz(false)
+        }
+    }
 
     const fA = () =>{
-        if (pergunta.alternativeCorrect === 'A'){
-            //check()
-            Alert.alert("Bom trabalho, você acertou!","Vamos lá",[
+        if (question.alternativeCorrect === 'A'){
+            Alert.alert('Acertou',"Bom trabalho, você acertou!",[
                 {
                     text: "Continue",
                     onPress: () => check()
@@ -48,8 +54,10 @@ export default function AnswerQuestion({ navigation }){
             ])
 
         }else{
-            //check()
-            Alert.alert(`A alternativa correta é:`,'Vamos lá', [
+            Alert.alert('Opa, essa você errou',
+                `A resposta correta é a ${question.alternativeCorrect}`
+                ,
+                [
                     {
                         text: "Continue",
                         onPress: () => check()
@@ -59,45 +67,69 @@ export default function AnswerQuestion({ navigation }){
         }
     }
     const fB = () =>{
-        if (pergunta.alternativeCorrect === 'B'){
-            //check()
-            Alert.alert("Bom trabalho, você acertou!")
+        if (question.alternativeCorrect === 'B'){
+            Alert.alert('Feedback',"Bom trabalho, você acertou!",[
+                {
+                    text: "Continue",
+                    onPress: () => check()
+                }
+            ])
 
         }else{
-            //check()
-            Alert.alert(`A alternativa correta é: ${pergunta.alternativeCorrect}`)
+            Alert.alert('Opa, essa você errou',
+                `A resposta correta é a ${question.alternativeCorrect}`
+                ,
+                [
+                    {
+                        text: "Continue",
+                        onPress: () => check()
+                    }
+                ])
 
-        }
-    }
-
-    const check = () => {
-        if(!(perguntas.length <= 0)){
-            setPergunta(perguntas.pop())
-        }else{
-            Alert.alert("Finalizamos essa tarefa, até o próxima")
-            setA(false)
         }
     }
 
     const fC = () =>{
-        if (pergunta.alternativeCorrect === 'C'){
-            //check()
-            Alert.alert("Bom trabalho, você acertou!")
+        if (question.alternativeCorrect === 'C'){
+            Alert.alert('Feedback',"Bom trabalho, você acertou!",[
+                {
+                    text: "Continue",
+                    onPress: () => check()
+                }
+            ])
 
         }else{
-            //check()
-            Alert.alert(`A alternativa correta é: ${pergunta.alternativeCorrect}`)
+            Alert.alert('Opa, essa você errou',
+                `A resposta correta é a ${question.alternativeCorrect}`
+                ,
+                [
+                    {
+                        text: "Continue",
+                        onPress: () => check()
+                    }
+                ])
 
         }
     }
     const fD = () =>{
-        if (pergunta.alternativeCorrect === 'D'){
-            //check()
-            Alert.alert("Bom trabalho, você acertou!")
+        if (question.alternativeCorrect === 'D'){
+            Alert.alert('Feedback',"Bom trabalho, você acertou!","Vamos lá",[
+                {
+                    text: "Continue",
+                    onPress: () => check()
+                }
+            ])
 
         }else{
-            //check()
-            Alert.alert(`A alternativa correta é: ${pergunta.alternativeCorrect}`)
+            Alert.alert('Opa, essa você errou',
+                `A resposta correta é a ${question.alternativeCorrect}`
+                ,
+                [
+                    {
+                        text: "Continue",
+                        onPress: () => check()
+                    }
+                ])
 
         }
     }
@@ -105,7 +137,7 @@ export default function AnswerQuestion({ navigation }){
     return(
         <View style={styles.container}>
             {
-                (!a) ?
+                (!startQuizz) ?
                 <View >
                     <ScrollView>
                         <Title style={styles.title}>Escolha um assunto</Title>
@@ -127,37 +159,16 @@ export default function AnswerQuestion({ navigation }){
                 </View>
                 :
                 <View style={styles.container}>
-                <Title style={styles.question}>{pergunta?.ask}</Title>
-                <Button style={styles.buttonPrimary} mode="contained" onPress={() => fA()}>{pergunta?.alternative_a}</Button>
-                <Button style={styles.buttonPrimary} mode="contained" onPress={() => fB()}>{pergunta?.alternative_b}</Button>
-                <Button style={styles.buttonPrimary} mode="contained" onPress={() => fC()}>{pergunta?.alternative_c}</Button>
-                <Button style={styles.buttonPrimary} mode="contained" onPress={() => fD()}>{pergunta?.alternative_d}</Button>
+                <Title style={styles.question}>{question?.ask}</Title>
+                <Button style={styles.buttonPrimary} mode="contained" onPress={() => fA()}>A) {question?.alternative_a}</Button>
+                <Button style={styles.buttonPrimary} mode="contained" onPress={() => fB()}>B) {question?.alternative_b}</Button>
+                <Button style={styles.buttonPrimary} mode="contained" onPress={() => fC()}>C) {question?.alternative_c}</Button>
+                <Button style={styles.buttonPrimary} mode="contained" onPress={() => fD()}>D) {question?.alternative_d}</Button>
                 </View>
             }
         </View>
     )
 }
-
-function Quiz(){
-
-    // const [questions, setQuestions] = React.useState([])
-    //
-    // const getQuestions = React.useCallback(() => {
-    //     MatterService.getMatters().then((response) => {
-    //         setQuestions(response)
-    //     })
-    // }, [])
-    //
-    // React.useEffect(() => {
-    //     getQuestions()
-    // }, [getQuestions()])
-
-}
-
-
-
-
-
 
 
 const styles = StyleSheet.create({

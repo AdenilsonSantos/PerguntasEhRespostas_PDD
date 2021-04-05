@@ -9,10 +9,10 @@ import RegisterMatter from "./RegisterMatter";
 
 export const RegisterQuestionContext = React.createContext({isRegister: false})
 
-export default function RegisterQuestion({ navigation }) {
+export default function RegisterQuestion() {
 
     const [newMatter, setNewMatter] = React.useState(false)
-    const [question, setQuestion] = React.useState({
+    const [ question ] = React.useState({
         ask: '',
         alternative_a: '',
         alternative_b: '',
@@ -35,7 +35,8 @@ export default function RegisterQuestion({ navigation }) {
     }, [])
 
     React.useEffect(() => {
-        getMatters(), newMatter
+        getMatters(),
+        newMatter
     }, [getMatters, newMatter])
 
 
@@ -49,9 +50,9 @@ export default function RegisterQuestion({ navigation }) {
             values.alternativeCorrect,
             values.matter
         ).then((response) => {
-            Alert.alert(response?.message)
+            Alert.alert("Cadastro", response?.message)
         }).catch((error) => {
-            Alert.alert(error.message)
+            Alert.alert("Cadastro",error.message)
         })
     }
 
@@ -61,7 +62,7 @@ export default function RegisterQuestion({ navigation }) {
                 {newMatter && <RegisterMatter visible={true} />}
                 <View style={styles.container} >
                     <View style={styles.containerAux} >
-                        <Title style={styles.title} >Insira sua pergunta aqui</Title>
+                        <Title style={styles.title} >Registre sua pergunta aqui</Title>
 
                         <Formik
                             initialValues={question}

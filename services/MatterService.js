@@ -4,8 +4,10 @@ import {db} from '../config/config';
 
 
 async function registerMatter(matter){
+
     let responseMessage = ''
-    if (!await existMatter(matter)){
+    if (!existMatter(matter)){
+        console.log("Cheguei primeiro")
         await db.ref('/matters')
             .push({matter})
             .then((response) => {
@@ -15,10 +17,10 @@ async function registerMatter(matter){
                 responseMessage = {isSuccess: false, message: "Não conseguimos cadastrar seu assunto"}
             })
         return responseMessage
+    }else{
+        responseMessage = {isSuccess: false, message: "Esse assunto já existe, tente outro nome"}
+        return responseMessage
     }
-    responseMessage = {isSuccess: false, message: "Esse assunto já existe, tente outro nome"}
-    return responseMessage
-
 }
 
 async function getMatters(){
@@ -32,21 +34,21 @@ async function getMatters(){
     return matters
 }
 
-async function existMatter(matter){
-    await db.ref('/matters')
-        .on('value', (snapshot) => {
-            let data = snapshot.val();
-            let matters = Object.values(data);
-            console.log(matters)
-            matters.map((mat) => {
-                if (mat == matter) return true
+function existMatter(matter){
+    let exist = false
+    db.ref('/matters')
+        .get()
+        .then((dataSnapshot) => {
+            dataSnapshot.forEach((matt) => {
+                if (matter === matt.exportVal().matter){
+                    exist = true
+                }
             })
         })
-    return false
+    return exist
 }
 
 export default {
     registerMatter,
-    getMatters,
-    existMatter
+    getMatters
 }

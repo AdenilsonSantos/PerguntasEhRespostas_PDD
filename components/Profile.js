@@ -3,10 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { Avatar } from 'react-native-elements';
 import {Button, Text} from 'react-native-paper';
 
-
 import {AuthContext} from "../routes/Routes";
-import MatterService from "../services/MatterService";
-import QuizService from "../services/QuizService";
 
 
 export default function Profile({ navigation }){
@@ -32,9 +29,9 @@ export default function Profile({ navigation }){
                 <Text style={styles.email} >{authUser.email}</Text>
             </View>
             <View style={styles.containerButtons}>
-                <Button style={styles.buttonPrimary} mode="contained" onPress={() => navigation.navigate('Criar Pergunta')} >Criar uma pergunta</Button>
+                <Button style={styles.buttonPrimary} mode="contained" onPress={() => navigation.navigate('Registrar Pergunta')} >Criar uma pergunta</Button>
                 <Button style={styles.buttonSecondary} mode="contained" onPress={() => navigation.navigate('Responder Questionário')}>Responder um Questionário</Button>
-                <Button style={styles.buttonOut} mode="contained" onPress={() => MatterService.getMatters()} >Sair</Button>
+                <Button style={styles.buttonOut} mode="contained" onPress={() => logOut()} >Sair</Button>
             </View>
         </View>
     )

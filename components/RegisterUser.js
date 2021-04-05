@@ -10,7 +10,7 @@ import {AuthContext} from "../routes/Routes";
 
 export default function RegisterUser({ navigation }) {
 
-    const { authUser, setAuthUser } = React.useContext(AuthContext)
+    const { setAuthUser } = React.useContext(AuthContext)
 
     const [ user ] = useState({
         fullName: '',
@@ -18,7 +18,7 @@ export default function RegisterUser({ navigation }) {
         password: ''
     })
 
-    const onSubmit = (values, {resetForm}) => {
+    const onSubmit = (values, resetForm) => {
         AuthUser.RegisterUser(
             values.fullName,
             values.email,

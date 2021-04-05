@@ -16,7 +16,7 @@ async function registerQuestion(ask, alternative_a, alternative_b,
                 matter
             })
         .then((response) => {
-            responseMessage = {isSuccess: true, message: "Sua resposta foi cadastrada com sucesso"}
+            responseMessage = {isSuccess: true, message: "Sua pergunta foi cadastrada com sucesso"}
         }).catch((error) => {
             responseMessage = {isSuccess: false, message: "Não conseguimos cadastrar sua pergunta"}
         })

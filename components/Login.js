@@ -13,7 +13,7 @@ import {AuthContext} from "../routes/Routes";
 export default function Login({ navigation }) {
 
     const { setAuthUser } = React.useContext(AuthContext)
-    const [ user, setUser ] = React.useState({
+    const [ user ] = React.useState({
         email: '',
         password: ''
     })
@@ -25,12 +25,12 @@ export default function Login({ navigation }) {
         ).then( async (response) => {
             let user = response?.user
             await setAuthUser({isAuthenticated: true, uid: user.uid, name: user.name, email: user.email})
-            Alert.alert(response?.message)
+            Alert.alert('Autenticação', response?.message)
             if (response?.isSuccess){
                 resetForm({values: ''})
             }
         }).catch((error) => {
-            Alert.alert(error.message)
+            Alert.alert('Autenticação', 'Houve algum erro, tente novamente')
         })
     }
 

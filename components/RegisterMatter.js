@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Alert, Modal, StyleSheet, View} from "react-native";
-import {Button, Text, TextInput, Title} from "react-native-paper";
+import {Button, Text, TextInput} from "react-native-paper";
 import MatterService from "../services/MatterService";
 import Validator from "../validator/validator";
 import {Formik} from "formik";
@@ -11,18 +11,18 @@ export default function RegisterMatter(props){
 
     const {setNewMatter} = React.useContext(RegisterQuestionContext)
 
-    const [matter, setMatters] = React.useState({matter: ''})
-    const [visible, setVisible] = React.useState(props.visible ? true : false)
+    const [ matter ] = React.useState({matter: ''})
+    const [visible, setVisible] = React.useState(!!props.visible)
 
     const onSubmit = (values) => {
         MatterService.registerMatter(values.matter)
             .then((response) => {
                 setNewMatter(false)
                 setVisible(false)
-                Alert.alert(response?.message)
+                Alert.alert('Cadastro', response?.message)
             })
             .catch((error) => {
-                Alert.alert(error.message)
+                Alert.alert('Cadastro', error.message)
             })
     }
 
